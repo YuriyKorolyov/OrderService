@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="OrderService.Core/OrderService.Core.csproj" />
+  <Project Path="OrderService.DataAccess.Postgres/OrderService.DataAccess.Postgres.csproj" />
+  <Project Path="OrderService.Tests/OrderService.Tests.csproj" />
+  <Project Path="OrderService.WebApi/OrderService.WebApi.csproj" />
+</Solution>
