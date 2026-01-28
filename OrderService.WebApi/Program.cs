@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using OrderService.DataAccess.Postgres;
 using OrderService.WebApi.Behaviors;
+using OrderService.WebApi.Mappers;
 using OrderService.WebApi.Validators;
 using System;
 using System.Reflection;
@@ -31,6 +32,9 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 // Add DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+// Add mappers
+builder.Services.AddSingleton<OrderMapper>();
 
 var app = builder.Build();
 
