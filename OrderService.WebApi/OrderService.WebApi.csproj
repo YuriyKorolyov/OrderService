@@ -21,7 +21,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Controllers\" />
     <Folder Include="UseCases\Queries\" />
     <Folder Include="Extensions\" />
     <Folder Include="Middleware\" />
