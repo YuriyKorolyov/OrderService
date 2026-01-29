@@ -2,8 +2,11 @@ using FluentValidation;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
+using Refit;
 using OrderService.DataAccess.Postgres;
 using OrderService.WebApi.Behaviors;
+using OrderService.WebApi.Clients;
+using OrderService.WebApi.Events;
 using OrderService.WebApi.Mappers;
 using OrderService.WebApi.Validators;
 using System;
@@ -33,8 +36,34 @@ builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+// Add HTTP client and Refit wrapper for PaymentService
+builder.Services.AddHttpClient("PaymentService", (serviceProvider, client) =>
+{
+    var configuration = serviceProvider.GetRequiredService<IConfiguration>();
+    var baseUrl = configuration["PaymentService:BaseUrl"];
+
+    if (string.IsNullOrWhiteSpace(baseUrl))
+    {
+        throw new InvalidOperationException(
+            "PaymentService base URL is not configured. " +
+            "Please set 'PaymentService:BaseUrl' in configuration.");
+    }
+
+    client.BaseAddress = new Uri(baseUrl);
+});
+
+builder.Services.AddScoped<IPaymentServiceClient>(serviceProvider =>
+{
+    var httpClientFactory = serviceProvider.GetRequiredService<IHttpClientFactory>();
+    var httpClient = httpClientFactory.CreateClient("PaymentService");
+    return RestService.For<IPaymentServiceClient>(httpClient);
+});
+
 // Add mappers
 builder.Services.AddSingleton<OrderMapper>();
+
+// Add Kafka producer
+builder.Services.AddSingleton<IOrderEventProducer, KafkaOrderEventProducer>();
 
 var app = builder.Build();
 

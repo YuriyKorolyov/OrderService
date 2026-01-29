@@ -21,6 +21,7 @@
     </PackageReference>
     <PackageReference Include="Refit" Version="9.0.2" />
     <PackageReference Include="Riok.Mapperly" Version="5.0.0-next.0" />
+    <PackageReference Include="Confluent.Kafka" Version="2.6.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.0" />
   </ItemGroup>
 
